@@ -21,7 +21,7 @@ dependencies {
 
     testImplementation 'com.h2database:h2:2.2.224'
 
-    implementation project(":lib")
+    implementation project(":fyeolib")
     implementation project(":flyway-plugin")
 
     // Use JUnit Jupiter for testing.

@@ -11,7 +11,7 @@ plugins {
 }
 
 rootProject.name = 'jdbc-secretsdriver'
-include('lib')
+include('fyeolib')
 include('flyway-plugin')
 include('aws-secretmanager')
 include('aws-flyway-example')
