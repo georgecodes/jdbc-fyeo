@@ -26,7 +26,8 @@ import java.sql.DriverManager;
 public class LocalstackTests {
 
     static ToStringConsumer toStringConsumer = new ToStringConsumer();
-
+    static String userName = "jamesbond";
+    static String password = "moneypenny";
     @Container
     public static LocalStackContainer localstack = new LocalStackContainer(DockerImageName.parse("localstack/localstack"))
             .withServices(
@@ -37,14 +38,13 @@ public class LocalstackTests {
     @Container
     public static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:11.1")
             .withDatabaseName("testdb")
-            .withUsername("batman")
-            .withPassword("letmein");
+            .withUsername(userName)
+            .withPassword(password);
 
     @TempDir
     static Path dataDir;
 
-    static String userName = "batman";
-    static String password = "letmein";
+
     static String userNameKey = "user.key";
     static String passwordKey = "password.key";
 

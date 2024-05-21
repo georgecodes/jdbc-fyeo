@@ -57,4 +57,6 @@ var jdbcUrl = "jdbc:secret.aws:h2:~/test";
 ## Works with popular migration tools
 
 There are other projects which attempt this, but when we tried to use them with a popular migration tool, we found specific code which restricted their use to
-the paid-for version. 
+the paid-for version.
+
+A working example of this, using testcontainers for AWS and Postgres, can be found [here](https://github.com/georgecodes/jdbc-fyeo/blob/main/aws-flyway-example/src/test/java/com/elevenware/jdbc/fyeo/example/LocalstackTests.java)
