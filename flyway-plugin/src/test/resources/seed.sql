@@ -1,0 +1,6 @@
+-- ALTER USER "sa" RENAME TO "george";
+-- ALTER USER "george" SET PASSWORD TO "batman";
+
+CREATE SCHEMA IF NOT EXISTS myschema;
+SET SCHEMA myschema;
+CREATE TABLE app_users (name VARCHAR(100) NOT NULL, email VARCHAR(100) NOT NULL);
