@@ -44,6 +44,18 @@ Connection connection = DriverManager.getConnection(uri, userNameKey, passwordKe
 
 ## Secret Stores available
 
+### In-memory
+
+For basic testing only. It is used by default, and is a singleton with which you can register your own secrets
+
+### Env
+
+This pulls secrets from environment variables. It can be configured using
+
+```java
+var jdbcUrl = "jdbc:secret.env:h2:~/test";
+```
+
 ### AWS Secret Store
 
 This uses AWS Secrets Manager as the backing store for your credentials
@@ -59,4 +71,12 @@ var jdbcUrl = "jdbc:secret.aws:h2:~/test";
 There are other projects which attempt this, but when we tried to use them with a popular migration tool, we found specific code which restricted their use to
 the paid-for version.
 
-A working example of this, using testcontainers for AWS and Postgres, can be found [here](https://github.com/georgecodes/jdbc-fyeo/blob/main/aws-flyway-example/src/test/java/com/elevenware/jdbc/fyeo/example/LocalstackTests.java)
+## Examples
+
+A working example of the usage, using testcontainers for AWS and Postgres, can be found [here](https://github.com/georgecodes/jdbc-fyeo/blob/main/aws-flyway-example/src/test/java/com/elevenware/jdbc/fyeo/example/LocalstackTests.java)
+
+The docker-compose file docker-compose-spring-flyway.yml will build an example Spring Boot/Flyway application
+
+A complete example using the Spring Boot application, Flyway, Postgres managed by RDS and AWS secrets manager can be found in the *terraform* directory
+
+In the latter 2 cases, curling the relevant service at /api/v1/users will return some JSON that ultimately was provisioned by Flyway using the FYEO driver.

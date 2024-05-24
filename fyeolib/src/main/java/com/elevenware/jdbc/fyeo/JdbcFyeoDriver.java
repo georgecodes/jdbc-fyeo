@@ -50,6 +50,8 @@ public class JdbcFyeoDriver implements Driver {
         }
         secretImpl = secretImpl.split("\\.")[1];
         switch(secretImpl) {
+            case "env":
+                return new EnvVarSecretStore();
             case "aws":
                 return loadStore(SecretStoreDrivers.AWS_SECRET_STORE);
         }
@@ -58,7 +60,7 @@ public class JdbcFyeoDriver implements Driver {
 
     @Override
     public boolean acceptsURL(String url) throws SQLException {
-        return false;
+        return url.startsWith("jdbc:secret");
     }
 
     @Override
