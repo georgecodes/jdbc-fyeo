@@ -1,4 +1,4 @@
-name: Build everything on merge
+name: testing publishing
 
 on:
   push:
@@ -15,4 +15,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
       - name: Publish fyeolib
+        env:
+          ORG_GRADLE_PROJECT_nexusUsername=${{ secrets.ORG_GRADLE_PROJECT_nexusUsername }}
+          ORG_GRADLE_PROJECT_nexusPassword=${{ secrets.ORG_GRADLE_PROJECT_nexusPassword }}
         run: ./gradlew fyeolib:build fyeolib:publish
