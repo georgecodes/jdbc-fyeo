@@ -6,11 +6,6 @@ on:
       - "main"
 
 jobs:
-  thing:
-    runs-on: ubuntu-latest
-    if: "contains(github.event.pull_request.title, '[PUBLISH]')"
-    steps:
-      - run: echo "HELLO"
   test-library:
     runs-on: ubuntu-latest
     steps:
