@@ -1,0 +1,29 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:11.1
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=dbuser123
+      - POSTGRES_PASSWORD=dbpassword12345
+      - POSTGRES_DB=testdb
+  app:
+    depends_on:
+      - postgres
+    build:
+      context: ./examples/aws-spring-flyway
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:secret.env:postgresql://postgres:5432/testdb
+      - SPRING_FLYWAY_URL=jdbc:secret.env:postgresql://postgres:5432/testdb
+      - SPRING_DATASOURCE_USERNAME=SECRET_USERNAME
+      - SPRING_FLYWAY_USER=SECRET_USERNAME
+      - SPRING_DATASOURCE_PASSWORD=SECRET_PASSWORD
+      - SPRING_FLYWAY_PASSWORD=SECRET_PASSWORD
+      - SECRET_USERNAME=dbuser123
+      - SECRET_PASSWORD=dbpassword12345
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.elevenware.jdbc.fyeo.JdbcFyeoDriver
+      - SPRING_FLYWAY_DRIVER_CLASS_NAME=com.elevenware.jdbc.fyeo.JdbcFyeoDriver
