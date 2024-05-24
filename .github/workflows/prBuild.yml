@@ -1,9 +1,8 @@
-name: Run unit tests
+name: PR Build checks
 
 on:
-  push:
-    branches:
-      - "*"
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
 
 jobs:
   test-library:
@@ -15,8 +14,24 @@ jobs:
         uses: gradle/gradle-build-action@v2
       - name: Run fyeolib tests
         run: ./gradlew fyeolib:clean fyeolib:test
+
+  test-flyway-plugin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v3
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
       - name: Run flyway plugin tests
         run: ./gradlew flyway-plugin:clean flyway-plugin:test
+
+  test-aws-secretmanager-driver:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project sources
+        uses: actions/checkout@v3
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
       - name: Run aws secretmanager plugin tests
         run: ./gradlew aws-secretmanager:clean aws-secretmanager:test
 

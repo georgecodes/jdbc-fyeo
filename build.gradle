@@ -1,0 +1,80 @@
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+    apply plugin: 'signing'
+
+    group = 'com.elevenware.fyeo'
+    version = '0.0.2-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    java {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+//    dependencies {
+//        testCompile 'org.mockito:mockito-core:2.11.0'
+//        testCompile 'org.assertj:assertj-core:3.8.0'
+//        testCompile 'junit:junit:4.12'
+//    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                from components.java
+
+                pom {
+                    name = 'jdbc-fyeo'
+                    description = 'A jdbc driver which pulls credentials from secret stores'
+                    url = 'https://github.com/georgecodes/jdbc-fyeo'
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    groupId = "com.elevenware.fyeo"
+                    version = version
+                    developers {
+                        developer {
+                            id = 'georgecodes'
+                            name = 'George McIntosh'
+                            email = 'george@elevenware.com'
+                        }
+                    }
+                    scm {
+                        connection = 'scm:git:https://github.com/georgecodes/jdbc-fyeo.git'
+                        developerConnection = 'scm:git:https://github.com/georgecodes/jdbc-fyeo.git'
+                        url = 'https://github.com/georgecodes/jdbc-fyeo'
+                    }
+                }
+            }
+        }
+        repositories {
+            maven {
+
+                def releasesRepoUrl = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://oss.sonatype.org/content/repositories/snapshots/'
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                name = 'nexus'
+                credentials(PasswordCredentials)
+            }
+        }
+
+    }
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
+    signing {
+        useGpgCmd()
+//        sign configurations.runtimeElements
+        sign publishing.publications.maven
+    }
+
+}
