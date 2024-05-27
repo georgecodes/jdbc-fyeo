@@ -1,25 +1,3 @@
-resource "aws_security_group" "rds" {
-  vpc_id = module.vpc.vpc_id
-
-  ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "rds-sg"
-  }
-}
-
 resource "random_password" "db_password" {
   length           = 16
   special          = true
@@ -51,20 +29,27 @@ resource "aws_secretsmanager_secret_version" "db_password_version" {
   secret_string = random_password.db_password.result
 }
 
-resource "aws_db_instance" "main" {
-  allocated_storage    = 20
-  engine               = "postgres"
-  engine_version       = "16.2"
-  instance_class       = "db.t3.micro"
-  db_name              = "testdb"
-  username             = aws_secretsmanager_secret_version.db_user_version.secret_string
-  password             = aws_secretsmanager_secret_version.db_password_version.secret_string
-  parameter_group_name = "default.postgres16"
-  skip_final_snapshot  = true
-  db_subnet_group_name = module.vpc.database_subnet_group_name
-  vpc_security_group_ids = [aws_security_group.rds.id]
+data "aws_iam_policy_document" "dbsecret" {
+  statement {
+    sid    = "EnableAnotherAWSAccountToReadTheSecret"
+    effect = "Allow"
 
-  tags = {
-    Name = "main-rds-instance"
+    principals {
+      type        = "AWS"
+      identifiers = [aws_iam_role.ecs_task_execution_role.arn]
+    }
+
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = [aws_secretsmanager_secret.db_user.arn, aws_secretsmanager_secret.db_password.arn]
   }
+}
+
+resource "aws_secretsmanager_secret_policy" "dbuser" {
+  secret_arn = aws_secretsmanager_secret.db_user.arn
+  policy     = data.aws_iam_policy_document.dbsecret.json
+}
+
+resource "aws_secretsmanager_secret_policy" "dbpassword" {
+  secret_arn = aws_secretsmanager_secret.db_password.arn
+  policy     = data.aws_iam_policy_document.dbsecret.json
 }
