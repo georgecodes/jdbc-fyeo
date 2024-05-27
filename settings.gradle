@@ -14,5 +14,6 @@ rootProject.name = 'jdbc-fyeo'
 include('fyeolib')
 include('flyway-plugin')
 include('aws-secretmanager')
+include('gcloud-secretmanager')
 include('aws-flyway-example')
 include('examples:aws-spring-flyway')
